@@ -1,85 +1,33 @@
-import {useState} from 'react';
-import {Link, NavLink} from 'react-router-dom'
-import {RxHamburgerMenu,} from "react-icons/rx";
-import {RiCloseLargeLine} from "react-icons/ri";
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-import {Button} from "./ui/button.tsx";
-import LoginModal from "./LoginModal.tsx";
-import RegisterModal from "./RegisterModal.tsx";
+interface NavbarProps {
+  toggleSignIn: () => void; // No need for a parameter
+}
 
-const navLinks = [
-    {name: "Home", path: "/"},
-    {name: "About Us", path: '/about'},
-    {name: "Contact Us", path: "/contact"}
-]
+const Navbar: React.FC<NavbarProps> = ({ toggleSignIn }) => {
+  return (
+    <nav className="flex justify-between items-center px-10 py-4 bg-transparent">
+      {/* Logo */}
+      <Link to="/" className="text-2xl font-bold text-white">
+        <span className="text-yellow-400">ASSESSMENT </span>PLATFORM
+      </Link>
 
-const Navbar = () => {
-    const [isOpen, setIsOpen] = useState(false)
-    return (
-        <nav className={`bg-blue-800 w-full h-14 flex justify-between items-center `}>
-            <div className={`container mx-auto justify-between flex lg:inline-flex`}>
-                <div>
-                    <Link to='/'>
-                        <p className={`text-white text-lg px-4`}><span className={`text-amber-400`}>ASSESSMENT </span>PORTAL
-                        </p>
-                    </Link>
-                </div>
-                <div className={`hidden md:flex space-x-6 items-center`}>
-                    {navLinks.map((link) => (
-                        <NavLink
-                            key={link.path}
-                            to={link.path}
-                            className={({isActive}) => `${isActive ? 'text-amber-400' : 'text-white hover:text-green-400'} `}
-                        >
-                            {link.name.toUpperCase()}
-                        </NavLink>
-                    ))}
-                </div>
-                <div className={`hidden md:flex space-x-6`}>
-                    {/*<Button className={`bg-yellow-400 text-black hover:bg-white`}>Login</Button>*/}
-                    <LoginModal />
-                    {/*<Button className={`bg-yellow-400 text-black hover:bg-white`}>Signup</Button>*/}
-                    <RegisterModal />
-                </div>
-                <div className={`md:hidden flex flex-end`}>
-                    {!isOpen ? (
-                            <RxHamburgerMenu
-                                className={`mx-2 mt-1 w-5 h-5 text-white relative`}
-                                onClick={() => setIsOpen(!isOpen)}
-                            />
-                        ) :
-                        <RiCloseLargeLine
-                            className={`mx-2 mt-1 w-5 h-5 z-[51] text-white`}
-                            onClick={() => setIsOpen(!isOpen)}
-                        />
-                    }
-                </div>
-            </div>
-            {isOpen && (
-                <div className="fixed inset-0 z-50 bg-blue-800 pt-14 md:hidden">
-                    <div className="flex flex-col space-y-4 p-4">
-                        {navLinks.map((link) => (
-                            <div key={link.path}
-                                 className={`bg-yellow-400 flex justify-center items-center h-9 text-black rounded-md `}>
-                                <Link
+      {/* Navigation Links */}
+      <div className="flex space-x-8">
+        <Link to="/" className="text-white hover:text-yellow-400">HOME</Link>
+        <Link to="/about" className="text-white hover:text-yellow-400">ABOUT US</Link>
+        <Link to="/contact" className="text-white hover:text-yellow-400">CONTACT US</Link>
+      </div>
 
-                                    to={link.path}
-                                    className="text-black text-lg hover:text-green-400"
-                                    onClick={() => setIsOpen(!isOpen)}
-                                >
-                                    {link.name}
-                                </Link>
-                            </div>
-
-                        ))}
-                        {/*<Button className="bg-yellow-400 text-black hover:bg-white w-full md:w-44 ">Login</Button>*/}
-                        <LoginModal />
-                        <Button className="bg-yellow-400 text-black hover:bg-white w-full">Signup</Button>
-                    </div>
-                </div>
-            )}
-        </nav>
-    );
+      {/* Sign In / Sign Up */}
+      <div className="flex space-x-4">
+        {/* Trigger the Sign-In Modal */}
+        <button onClick={toggleSignIn} className="text-white hover:text-yellow-400">SIGN IN</button>
+        <Link to="/signup" className="px-4 py-2 bg-yellow-400 text-black rounded hover:bg-white">SIGN UP</Link>
+      </div>
+    </nav>
+  );
 };
 
 export default Navbar;

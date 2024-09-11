@@ -16,9 +16,9 @@ const RegisterModal: React.FC<RegisterModalProps> = ({ isOpen, onClose }) => {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="flex items-center justify-center">Register</DialogTitle>
+          <DialogTitle className="flex items-center ">Register</DialogTitle>
           <Separator className="bg-black" />
-          <DialogHeader className="md:text-lg">Welcome to Assessment Portal</DialogHeader>
+          <DialogHeader className="md:text-md">Welcome to Assessment Portal</DialogHeader>
           <DialogDescription>Create an account</DialogDescription>
         </DialogHeader>
         <div>

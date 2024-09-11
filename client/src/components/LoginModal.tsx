@@ -6,7 +6,7 @@ import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 
 interface LoginModalProps {
-  toggleSignIn: () => void; // Close the modal
+  toggleSignIn: () => void; 
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ toggleSignIn }) => {
@@ -57,7 +57,6 @@ const LoginModal: React.FC<LoginModalProps> = ({ toggleSignIn }) => {
           </Button>
         </div>
 
-        {/* Close Modal */}
         <div className="flex items-center justify-center mt-4 w-full">
           <p className="text-gray-400 text-sm">
             First time using Portal?{" "}

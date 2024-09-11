@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AiOutlineBell } from 'react-icons/ai';
 
-const StudentNavbar: React.FC = () => {
+const EducatorNavbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
   
@@ -63,7 +63,8 @@ const StudentNavbar: React.FC = () => {
             </button>
           </div>
           <div className="flex flex-col space-y-4 p-4 text-right">
-            <Link to="/student" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>HOME</Link>
+            <Link to="/educator" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>HOME</Link>
+            <Link to="/tests" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>TESTS</Link>
             <Link to="/profile" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>PROFILE</Link>
             <Link to="/settings" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>SETTINGS</Link>
             <button
@@ -77,7 +78,8 @@ const StudentNavbar: React.FC = () => {
       </div>
 
       <div className="hidden md:flex md:space-x-8">
-        <Link to="/student" className="text-white hover:text-yellow-400">HOME</Link>
+        <Link to="/educator" className="text-white hover:text-yellow-400">HOME</Link>
+        <Link to="/tests" className="text-white hover:text-yellow-400">TESTS</Link>
         <Link to="/profile" className="text-white hover:text-yellow-400">PROFILE</Link>
         <Link to="/settings" className="text-white hover:text-yellow-400">SETTINGS</Link>
       </div>
@@ -98,4 +100,4 @@ const StudentNavbar: React.FC = () => {
   );
 };
 
-export default StudentNavbar;
+export default EducatorNavbar;

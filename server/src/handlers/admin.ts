@@ -59,8 +59,8 @@ export const createAdmin = async (req: Request, res: Response) => {
 
     } catch (err) {
         logger.info("Error from Create Admin Handler")
-        logger.error(err.message || err.toString())
-        return res.status(500).json({error: "Internal Server Error"})
+        logger.error(err);
+        return res.status(500).json({msg: err.message});
     }
 }
 
@@ -93,7 +93,7 @@ export const getAllAdmin = async (_req: Request, res: Response) => {
         if (admins.length === 0) {
             return res.status(404).json({msg: "Not even a single admin exist"})
         }
-        return res.status(200).json({data: admins})
+        return res.status(200).json(admins)
     } catch (err) {
         logger.error(err)
         res.status(500).json({msg: err.message})

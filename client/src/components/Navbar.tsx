@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import RegisterModal from './RegisterModal'; 
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom'
+import RegisterModal from './RegisterModal'
 
 interface NavbarProps {
-  toggleSignIn: () => void;
+  toggleSignIn: () => void
 }
 
 const Navbar: React.FC<NavbarProps> = ({ toggleSignIn }) => {
-  const [isOpen, setIsOpen] = useState(false); 
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   const handleOpenModal = () => {
-    setIsModalOpen(true);
-  };
+    setIsModalOpen(true)
+  }
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
-  };
+    setIsModalOpen(false)
+  }
 
   return (
     <nav className="relative flex items-center justify-between px-4 py-4 bg-transparent">
@@ -91,6 +91,13 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSignIn }) => {
           >
             CONTACT US
           </Link>
+          <Link
+            to="/protection"
+            className="text-white text-lg hover:text-yellow-400"
+            onClick={() => setIsOpen(false)}
+          >
+            PROTECTION
+          </Link>
           <button
             onClick={toggleSignIn}
             className="text-white hover:text-yellow-400"
@@ -98,7 +105,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSignIn }) => {
             SIGN IN
           </button>
           <button
-            onClick={handleOpenModal} 
+            onClick={handleOpenModal}
             className="px-4 py-2 bg-yellow-400 text-black rounded hover:bg-white text-center"
           >
             SIGN UP
@@ -107,15 +114,46 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSignIn }) => {
       </div>
 
       <div className="hidden md:flex md:space-x-8">
-        <Link to="/" className="text-white hover:text-yellow-400">HOME</Link>
-        <Link to="/about" className="text-white hover:text-yellow-400">ABOUT US</Link>
-        <Link to="/contact" className="text-white hover:text-yellow-400">CONTACT US</Link>
+        <Link to="/" className="text-white hover:text-yellow-400">
+          HOME
+        </Link>
+        <Link to="/about" className="text-white hover:text-yellow-400">
+          ABOUT US
+        </Link>
+        <Link to="/contact" className="text-white hover:text-yellow-400">
+          CONTACT US
+        </Link>
+        <Link
+          to="/protection"
+          className="text-white hover:text-yellow-400 flex items-center"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 4v4.5M12 12v6.5M12 2v1m0 16v1m-7-7.5v-1.75a6 6 0 0112 0V13a6 6 0 01-12 0v-1.75"
+            />
+          </svg>
+          <span className="ml-2">PROTECTION</span>
+        </Link>
       </div>
 
       <div className="hidden md:flex space-x-4 md:space-x-8">
-        <button onClick={toggleSignIn} className="text-white hover:text-yellow-400">SIGN IN</button>
         <button
-          onClick={handleOpenModal} 
+          onClick={toggleSignIn}
+          className="text-white hover:text-yellow-400"
+        >
+          SIGN IN
+        </button>
+        <button
+          onClick={handleOpenModal}
           className="px-4 py-2 bg-yellow-400 text-black rounded hover:bg-white"
         >
           SIGN UP
@@ -124,7 +162,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSignIn }) => {
 
       <RegisterModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </nav>
-  );
-};
+  )
+}
 
-export default Navbar;
+export default Navbar

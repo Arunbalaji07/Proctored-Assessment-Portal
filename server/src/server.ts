@@ -3,6 +3,7 @@ import express from 'express';
 import { expressjwt as jwt } from "express-jwt";
 import logger from 'pino-http';
 import pretty from 'pino-pretty';
+import { createStudent } from "./handlers/student";
 
 import router from './router';
 import {login} from "./handlers/login";
@@ -20,7 +21,7 @@ const stream = pretty({
 app.use(logger(stream));
 
 app.post('/login/:role', login)
-app.post('/signup')
+app.post('/signup', createStudent)
 
 app.use('/api', router)
 // TODO: UNCOMMENT THE BELOW LINE FOR PRODUCTION PURPOSE

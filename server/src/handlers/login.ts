@@ -2,6 +2,8 @@ import { Request, Response} from "express";
 
 import logger from "../logger";
 import {adminLogin} from "./admin";
+import {educatorLogin} from "./educator";
+import {studentLogin} from "./student";
 
 export const login = async (req: Request, res:Response) => {
     try {
@@ -10,10 +12,10 @@ export const login = async (req: Request, res:Response) => {
         switch (role) {
             case "admin":
                 return await adminLogin(req, res)
-            // case "educator":educator
-            //     return await educatorLogin(req, res)
-            // case "student":
-            //     return await studentLogin(req, res)
+            case "educator":
+                return await educatorLogin(req, res)
+            case "student":
+                return await studentLogin(req, res)
         }
     } catch (err) {
         logger.error(err);

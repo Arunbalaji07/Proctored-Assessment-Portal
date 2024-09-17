@@ -5,6 +5,7 @@ import logger from 'pino-http';
 import pretty from 'pino-pretty';
 
 import router from './router';
+import {login} from "./handlers/login";
 
 const app = express();
 
@@ -18,13 +19,11 @@ const stream = pretty({
 
 app.use(logger(stream));
 
-// TEST ROUTE
-app.get('/', (req, res) => {
-  res.json({ message: 'Hello' });
-});
+app.post('/login/:role', login)
+app.post('/signup')
 
 app.use('/api', router)
 // TODO: UNCOMMENT THE BELOW LINE FOR PRODUCTION PURPOSE
-app.use("/api", jwt({ secret: process.env.SECRET_KEY, algorithms:["HS256"]}), router)
+// app.use("/api", jwt({ secret: process.env.SECRET_KEY, algorithms:["HS256"]}), router)
 
 export default app;

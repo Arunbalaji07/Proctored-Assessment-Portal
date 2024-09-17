@@ -1,0 +1,131 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum QuestionType {
+  MULTIPLE_CHOICE
+  CODING
+  SHORT_ANSWER
+}
+
+model Admin {
+  id        String   @unique @default(uuid())
+  fullName  String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Educator {
+  id          String       @unique @default(uuid())
+  fullName    String
+  email       String       @unique
+  password    String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  assessments Assessment[]
+}
+
+model Student {
+  id          String       @unique @default(uuid())
+  fullName    String
+  email       String       @unique
+  password    String
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  submissions Submission[]
+}
+
+model Assessment {
+  id          String       @unique @default(uuid())
+  title       String
+  description String?
+  educatorId  String
+  educator    Educator     @relation(fields: [educatorId], references: [id])
+  questions   Question[]
+  submissions Submission[]
+  scheduledAt DateTime
+  endTime     DateTime
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+  assessmentSummary AssessmentSummary?
+}
+
+model Question {
+  id            String       @unique @default(uuid())
+  content       String
+  type          QuestionType
+  options       String[]     @default([])
+  correctAnswer String
+  difficulty    String?
+  assessmentId  String
+  assessment    Assessment   @relation(fields: [assessmentId], references: [id])
+  answers       Answer[]
+}
+
+model Submission {
+  id           String      @unique @default(uuid())
+  assessmentId String
+  assessment   Assessment  @relation(fields: [assessmentId], references: [id])
+  studentId    String
+  student      Student     @relation(fields: [studentId], references: [id])
+  answers      Answer[]
+  score        Float?
+  submittedAt  DateTime    @default(now())
+  proctoring   Proctoring?
+  report       Report?
+}
+
+model Answer {
+  id           String     @unique @default(uuid())
+  questionId   String
+  question     Question   @relation(fields: [questionId], references: [id])
+  submissionId String
+  submission   Submission @relation(fields: [submissionId], references: [id])
+  answer       String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Proctoring {
+  id           String     @unique @default(uuid())
+  submissionId String     @unique
+  submission   Submission @relation(fields: [submissionId], references: [id])
+  flagged      Boolean
+  incidentLogs String[]
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model Report {
+  id           String     @unique @default(uuid())
+  submissionId String     @unique
+  submission   Submission @relation(fields: [submissionId], references: [id])
+  summary      String?
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+}
+
+model AssessmentSummary {
+  id String @unique @default(uuid())
+  assessmentId String @unique
+  assessment Assessment @relation(fields: [assessmentId], references: [id])
+  totalSubmissions Int
+  averageScore Float
+  maxScore Float
+  minScore Float
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

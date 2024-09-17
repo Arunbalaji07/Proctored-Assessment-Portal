@@ -7,6 +7,7 @@ const StudentNavbar: React.FC = () => {
     const navigate = useNavigate();
   
     const handleLogout = () => {
+      localStorage.removeItem('student');
       navigate('/'); 
     };
 

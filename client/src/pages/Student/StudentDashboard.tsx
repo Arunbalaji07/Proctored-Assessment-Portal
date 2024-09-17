@@ -1,10 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import StudentNavbar from '../../components/StudentNavbar';
 import { FaAndroid } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 const StudentDashboard: React.FC = () => {
+  const navigate = useNavigate();
   const [userName, setUserName] = useState<string>('');
   const [assignments, setAssignments] = useState<any[]>([]);
+
+  const token = localStorage.getItem('student');
+    if (!token) {
+      // Redirect to login page if no token is found
+      navigate('/');
+      return;
+    }
 
   const mockUserData = { name: 'John Doe' };
   const mockAssignmentsData = [

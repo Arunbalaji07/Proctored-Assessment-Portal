@@ -1,3 +1,6 @@
+import { useState } from 'react';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 import { FcGoogle } from "react-icons/fc";
 import { Button } from "./ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "./ui/dialog";
@@ -10,6 +13,57 @@ interface LoginModalProps {
 }
 
 const LoginModal: React.FC<LoginModalProps> = ({ toggleSignIn }) => {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [role, setRole] = useState<string>('');
+  const [error, setError] = useState<string>('');
+  const navigate = useNavigate();
+
+  const handleLogin = async () => {
+    setError(''); // Clear previous errors
+
+    if (!email || !password || !role) {
+      setError('All fields are required');
+      return;
+    }
+
+    try {
+      const response = await axios.post(`http://localhost:7777/login/${role}`, {
+        email,
+        password
+      });
+
+      const { token } = response.data;
+
+      if (token) {
+        // Store role-specific token in local storage
+        localStorage.setItem(`${role}`, token);
+
+        // Redirect to the appropriate dashboard based on role
+        switch (role) {
+          case 'admin':
+            navigate('/admin');
+            break;
+          case 'student':
+            navigate('/student');
+            break;
+          case 'educator':
+            navigate('/educator');
+            break;
+          default:
+            setError('Unknown role');
+            break;
+        }
+      } else {
+        setError('Token not received');
+      }
+
+    } catch (error: any) {
+      console.error('Login failed:', error.response?.data || error.message);
+      setError('Login failed. Please check your credentials and try again.');
+    }
+  };
+
   return (
     <Dialog open={true} onOpenChange={toggleSignIn}>
       <DialogContent className="absolute p-6 rounded-lg shadow-lg max-w-md bg-white">
@@ -22,15 +76,29 @@ const LoginModal: React.FC<LoginModalProps> = ({ toggleSignIn }) => {
         <div className="space-y-4 mt-4 w-full">
           <div>
             <Label>Email Address</Label>
-            <Input type="email" placeholder="Enter your email" />
+            <Input 
+              type="email" 
+              placeholder="Enter your email" 
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
           <div>
             <Label>Password</Label>
-            <Input type="password" placeholder="Enter your password" />
+            <Input 
+              type="password" 
+              placeholder="Enter your password" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
           <div>
             <Label>Select Role</Label>
-            <select className="w-full border rounded-lg p-2 mt-1">
+            <select 
+              className="w-full border rounded-lg p-2 mt-1"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+            >
               <option value="">Select your role</option>
               <option value="student">Student</option>
               <option value="educator">Educator</option>
@@ -39,8 +107,17 @@ const LoginModal: React.FC<LoginModalProps> = ({ toggleSignIn }) => {
           </div>
         </div>
 
+        {error && (
+          <div className="mt-4 text-red-600 text-center">
+            {error}
+          </div>
+        )}
+
         <div className="mt-6 w-full">
-          <Button className="w-full bg-black text-white hover:bg-gray-800">
+          <Button 
+            className="w-full bg-black text-white hover:bg-gray-800"
+            onClick={handleLogin}
+          >
             Continue
           </Button>
         </div>

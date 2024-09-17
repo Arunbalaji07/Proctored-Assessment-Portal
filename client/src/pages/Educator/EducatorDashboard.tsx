@@ -3,6 +3,7 @@ import { Pie } from 'react-chartjs-2';
 import EducatorNavbar from '@/components/EducatorNavbar';
 import 'chart.js/auto';
 import Assessment from '@/assets/exam (1).png'
+import { useNavigate } from 'react-router-dom';
 
 interface PieData {
   labels: string[];
@@ -15,6 +16,7 @@ interface PieData {
 }
 
 const EducatorDashboard: React.FC = () => {
+  const navigate = useNavigate();
   const [pieData, setPieData] = useState<PieData>({
     labels: ['A grade', 'B grade', 'C grade', 'D grade', 'Failed'],
     datasets: [
@@ -25,6 +27,7 @@ const EducatorDashboard: React.FC = () => {
       },
     ],
   });
+  
 
   const [studentStats, setStudentStats] = useState({
     totalStudents: 0,
@@ -32,6 +35,13 @@ const EducatorDashboard: React.FC = () => {
   });
 
   useEffect(() => {
+
+    const token = localStorage.getItem('educator');
+    if (!token) {
+      navigate('/');
+      return;
+    }
+
     setTimeout(() => {
       const fetchedData: PieData = {
         labels: ['A grade', 'B grade', 'C grade', 'D grade', 'Failed'],

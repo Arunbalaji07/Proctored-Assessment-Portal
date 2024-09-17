@@ -7,6 +7,7 @@ const EducatorNavbar: React.FC = () => {
     const navigate = useNavigate();
   
     const handleLogout = () => {
+      localStorage.removeItem('educator');
       navigate('/'); 
     };
 

@@ -1,22 +1,28 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import RegisterModal from './RegisterModal'
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import RegisterModal from './RegisterModal';
 
 interface NavbarProps {
-  toggleSignIn: () => void
+  toggleSignIn: () => void;
+  disableSignIn?: boolean;
+  disableSignUp?: boolean;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ toggleSignIn }) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
+const Navbar: React.FC<NavbarProps> = ({ toggleSignIn, disableSignIn = false, disableSignUp = false }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const location = useLocation();
 
   const handleOpenModal = () => {
-    setIsModalOpen(true)
-  }
+    setIsModalOpen(true);
+  };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false)
-  }
+    setIsModalOpen(false);
+  };
+
+  // Determine if the current route is Compatibility Check page
+  const isCompatibilityPage = location.pathname === '/compatibility';
 
   return (
     <nav className="relative flex items-center justify-between px-4 py-4 bg-transparent">
@@ -44,7 +50,7 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSignIn }) => {
         </svg>
       </button>
 
-      {/* mobile sidebar */}
+      {/* Mobile sidebar */}
       <div
         className={`fixed inset-0 bg-black bg-opacity-75 z-50 transform ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
@@ -78,18 +84,11 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSignIn }) => {
             HOME
           </Link>
           <Link
-            to="/about"
+            to="/compatibility"
             className="text-white text-lg hover:text-yellow-400"
             onClick={() => setIsOpen(false)}
           >
-            ABOUT US
-          </Link>
-          <Link
-            to="/contact"
-            className="text-white text-lg hover:text-yellow-400"
-            onClick={() => setIsOpen(false)}
-          >
-            CONTACT US
+            COMPATIBILITY CHECK
           </Link>
           <Link
             to="/protection"
@@ -98,30 +97,39 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSignIn }) => {
           >
             PROTECTION
           </Link>
-          <button
-            onClick={toggleSignIn}
-            className="text-white hover:text-yellow-400"
-          >
-            SIGN IN
-          </button>
-          <button
-            onClick={handleOpenModal}
-            className="px-4 py-2 bg-yellow-400 text-black rounded hover:bg-white text-center"
-          >
-            SIGN UP
-          </button>
+          {!isCompatibilityPage && !disableSignIn && (
+            <button
+              onClick={toggleSignIn}
+              className="text-white hover:text-yellow-400"
+            >
+              SIGN IN
+            </button>
+          )}
+          {!isCompatibilityPage && !disableSignUp && (
+            <button
+              onClick={handleOpenModal}
+              className="px-4 py-2 bg-yellow-400 text-black rounded hover:bg-white text-center"
+            >
+              SIGN UP
+            </button>
+          )}
         </div>
       </div>
 
       <div className="hidden md:flex md:space-x-8">
-        <Link to="/" className="text-white hover:text-yellow-400">
+      <Link
+          to="/"
+          className="text-white flex items-center hover:text-yellow-400"
+          onClick={() => setIsOpen(false)}
+        >
           HOME
         </Link>
-        <Link to="/about" className="text-white hover:text-yellow-400">
-          ABOUT US
-        </Link>
-        <Link to="/contact" className="text-white hover:text-yellow-400">
-          CONTACT US
+        <Link
+          to="/compatibility"
+          className="text-white flex items-center hover:text-yellow-400"
+          onClick={() => setIsOpen(false)}
+        >
+          COMPATIBILITY CHECK
         </Link>
         <Link
           to="/protection"
@@ -146,23 +154,27 @@ const Navbar: React.FC<NavbarProps> = ({ toggleSignIn }) => {
       </div>
 
       <div className="hidden md:flex space-x-4 md:space-x-8">
-        <button
-          onClick={toggleSignIn}
-          className="text-white hover:text-yellow-400"
-        >
-          SIGN IN
-        </button>
-        <button
-          onClick={handleOpenModal}
-          className="px-4 py-2 bg-yellow-400 text-black rounded hover:bg-white"
-        >
-          SIGN UP
-        </button>
+        {!isCompatibilityPage && !disableSignIn && (
+          <button
+            onClick={toggleSignIn}
+            className="text-white hover:text-yellow-400"
+          >
+            SIGN IN
+          </button>
+        )}
+        {!isCompatibilityPage && !disableSignUp && (
+          <button
+            onClick={handleOpenModal}
+            className="px-4 py-2 bg-yellow-400 text-black rounded hover:bg-white"
+          >
+            SIGN UP
+          </button>
+        )}
       </div>
 
       <RegisterModal isOpen={isModalOpen} onClose={handleCloseModal} />
     </nav>
-  )
-}
+  );
+};
 
-export default Navbar
+export default Navbar;

@@ -9,10 +9,11 @@ import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 
 interface LoginModalProps {
-  toggleSignIn: () => void; 
+  isOpen: boolean;
+  onClose: () => void;
 }
 
-const LoginModal: React.FC<LoginModalProps> = ({ toggleSignIn }) => {
+const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [role, setRole] = useState<string>('');
@@ -20,7 +21,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ toggleSignIn }) => {
   const navigate = useNavigate();
 
   const handleLogin = async () => {
-    setError(''); // Clear previous errors
+    setError(''); 
 
     if (!email || !password || !role) {
       setError('All fields are required');
@@ -36,10 +37,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ toggleSignIn }) => {
       const { token } = response.data;
 
       if (token) {
-        // Store role-specific token in local storage
         localStorage.setItem(`${role}`, token);
 
-        // Redirect to the appropriate dashboard based on role
         switch (role) {
           case 'admin':
             navigate('/admin');
@@ -65,7 +64,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ toggleSignIn }) => {
   };
 
   return (
-    <Dialog open={true} onOpenChange={toggleSignIn}>
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="absolute p-6 rounded-lg shadow-lg max-w-md bg-white">
         <DialogHeader className="text-center">
           <DialogTitle className="text-2xl font-semibold">Login</DialogTitle>

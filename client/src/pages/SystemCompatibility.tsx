@@ -83,18 +83,12 @@ const CompatibilityCheckPage: React.FC = () => {
 
   return (
     <div className="relative min-h-screen">
-      {/* Background Image */}
       <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url(${Background})` }}>
-        {/* Overlay to darken the background */}
         <div className="absolute inset-0 bg-black opacity-60"></div>
       </div>
-
-      {/* Navbar */}
       <div className="relative z-20">
         <Navbar toggleSignIn={toggleSignIn} disableSignIn={true} disableSignUp={true} />
       </div>
-
-      {/* Compatibility Check Content */}
       <div className="relative min-h-screen text-gray-900 flex flex-col items-center py-10">
         <div className="w-full max-w-3xl p-6 bg-gray-500 shadow-lg rounded-lg">
           <h1 className="text-4xl font-bold mb-6 text-center text-yellow-400">System Compatibility Check</h1>
@@ -142,8 +136,6 @@ const CompatibilityCheckPage: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* Real-time Clock */}
       <div className="absolute bottom-4 left-4 text-white text-xl font-semibold bg-black bg-opacity-50 px-4 py-2 rounded-lg shadow-md">
         <p>{currentTime}</p>
       </div>

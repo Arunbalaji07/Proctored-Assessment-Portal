@@ -4,25 +4,23 @@ import LoginModal from '../components/LoginModal';
 import Background from '../assets/person-using-laptop.jpg';
 
 const HomePage: React.FC = () => {
-  const [showSignIn, setShowSignIn] = useState(false); // State to toggle Sign-In form
+  const [showSignIn, setShowSignIn] = useState(false);
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
 
   const toggleSignIn = () => {
-    setShowSignIn(!showSignIn); // Toggle the Sign-In form visibility
+    setShowSignIn(!showSignIn);
   };
 
   useEffect(() => {
-    // Update the clock every second
     const timer = setInterval(() => {
       setCurrentTime(new Date().toLocaleTimeString());
     }, 1000);
 
-    return () => clearInterval(timer); // Clean up interval on component unmount
+    return () => clearInterval(timer);
   }, []);
 
   return (
     <div className="relative h-screen w-screen">
-      {/* Background Image */}
       <div className="absolute inset-0">
         <img
           src={Background}
@@ -31,15 +29,12 @@ const HomePage: React.FC = () => {
         />
       </div>
 
-      {/* Overlay to darken the background */}
       <div className="absolute inset-0 bg-black opacity-60"></div>
 
-      {/* Navbar */}
       <div className="relative z-20">
         <Navbar toggleSignIn={toggleSignIn} />
       </div>
 
-      {/* Hero Section */}
       <div className="relative flex flex-col items-center justify-center mt-20 pt-20 text-center text-white p-2">
         <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold mb-4 ">
           Welcome to Our Platform
@@ -54,11 +49,8 @@ const HomePage: React.FC = () => {
         >
           Contact Us
         </a>
-        {/* Contact Us Button */}
-        
       </div>
 
-      {/* Real-time Clock */}
       <div className="absolute bottom-4 left-4 text-white text-xl font-semibold bg-black bg-opacity-50 px-4 py-2 rounded-lg shadow-md">
         <p>{currentTime}</p>
       </div>

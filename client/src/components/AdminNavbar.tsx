@@ -3,17 +3,17 @@ import { Link, useNavigate } from 'react-router-dom';
 import { AiOutlineBell } from 'react-icons/ai';
 
 const AdminNavbar: React.FC = () => {
-    const [isOpen, setIsOpen] = useState(false);
-    const navigate = useNavigate();
-  
-    const handleLogout = () => {
-      localStorage.removeItem('admin');
-      navigate('/'); 
-    };
+  const [isOpen, setIsOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('admin');
+    navigate('/'); 
+  };
 
   return (
     <nav className="relative flex items-center justify-between px-4 py-4 bg-transparent">
-      <Link to="/" className="text-xl font-bold text-white">
+      <Link to="/admin" className="text-xl font-bold text-white">
         <span className="text-yellow-400">ASSESSMENT </span>PLATFORM
       </Link>
 
@@ -65,11 +65,14 @@ const AdminNavbar: React.FC = () => {
           </div>
           <div className="flex flex-col space-y-4 p-4 text-right">
             <Link to="/admin" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>HOME</Link>
-            <Link to="/admin/create-stu" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>CREATE STUDENT</Link>
-            <Link to="/admin/create-edu" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>CREATE EDUCATOR</Link>
-            <Link to="/admin/audit-logs" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>ADUIT LOGS</Link>
+            <Link to="/admin/users" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>USERS</Link>
+            <Link to="/admin/assessments" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>ASSESSMENTS</Link>
+            <Link to="/admin/reports" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>REPORTS</Link>
+            <Link to="/admin/settings" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>SETTINGS</Link>
+            <Link to="/admin/audit-logs" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>AUDIT LOGS</Link>
+            <Link to="/admin/proctoring" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>AI PROCTORING</Link>
             <button
-              onClick={handleLogout} 
+              onClick={handleLogout}
               className="px-4 py-2 bg-yellow-400 text-black rounded hover:bg-white text-center"
             >
               SIGN OUT
@@ -78,11 +81,15 @@ const AdminNavbar: React.FC = () => {
         </div>
       </div>
 
+      {/* Desktop Navbar */}
       <div className="hidden md:flex md:space-x-8">
         <Link to="/admin" className="text-white hover:text-yellow-400">HOME</Link>
-        <Link to="/admin/create-stu" className="text-white hover:text-yellow-400">CREATE STUDENT</Link>
-        <Link to="/admin/create-edu" className="text-white hover:text-yellow-400">CREATE EDUCATOR</Link>
+        <Link to="/admin/users" className="text-white hover:text-yellow-400">USERS</Link>
+        <Link to="/admin/assessments" className="text-white hover:text-yellow-400">ASSESSMENTS</Link>
+        <Link to="/admin/reports" className="text-white hover:text-yellow-400">REPORTS</Link>
+        <Link to="/admin/settings" className="text-white hover:text-yellow-400">SETTINGS</Link>
         <Link to="/admin/audit-logs" className="text-white hover:text-yellow-400">AUDIT LOGS</Link>
+        <Link to="/admin/proctoring" className="text-white hover:text-yellow-400">AI PROCTORING</Link>
       </div>
 
       <div className="flex items-center space-x-4">
@@ -91,11 +98,11 @@ const AdminNavbar: React.FC = () => {
           <span className="absolute top-0 right-0 block h-2 w-2 bg-red-500 rounded-full"></span>
         </button>
         <button
-            onClick={handleLogout} 
-            className="px-4 py-2 bg-yellow-400 text-black rounded hover:bg-white text-center hidden md:block"
-          >
-            SIGN OUT
-          </button>
+          onClick={handleLogout}
+          className="px-4 py-2 bg-yellow-400 text-black rounded hover:bg-white text-center hidden md:block"
+        >
+          SIGN OUT
+        </button>
       </div>
     </nav>
   );

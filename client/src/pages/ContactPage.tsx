@@ -10,7 +10,6 @@ const ContactPage: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // backend logic
     console.log('Form submitted:', {
       name,
       email,
@@ -70,7 +69,7 @@ const ContactPage: React.FC = () => {
             <h2 className="text-3xl font-semibold mb-6">
               Your Feedback Matters.
             </h2>
-            <p>Fill out the form below, and we’ll get back to you soon!</p>
+            <p>Fill out the form below, and we'll get back to you soon!</p>
             <br />
             <form onSubmit={handleSubmit}>
               
@@ -104,7 +103,7 @@ const ContactPage: React.FC = () => {
                   value={queryType}
                   onChange={(e) => {
                     setQueryType(e.target.value)
-                    setSubQueryType('') // Reset sub-query type when main query type changes
+                    setSubQueryType('')
                   }}
                   className="w-full px-4 py-2 border rounded-lg bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 >

@@ -2,7 +2,7 @@ import {Request, Response} from "express";
 import prisma from "../db";
 import logger from "../logger";
 
-import {comparePassword, createJWTEducator, createJWTStudent, hashPassword} from "../modules/auth";
+import {comparePassword, createJWTStudent, hashPassword} from "../modules/auth";
 
 export const createStudent = async (req: Request, res: Response) => {
     try {
@@ -46,7 +46,7 @@ export const studentLogin = async (req:Request, res:Response) => {
 
     if (isPasswordValid) {
         logger.info("Student successfully logged in");
-        const token = createJWTEducator(student)
+        const token = createJWTStudent(student)
         return res.status(200).json({token})
     } else {
         return res.status(400).json({msg: "Incorrect password"});

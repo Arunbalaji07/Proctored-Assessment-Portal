@@ -74,6 +74,9 @@ export const getEducatorById = async (req: Request, res: Response) => {
         const educator = await prisma.educator.findUnique({
             where: {
                 id: req.params.id
+            },
+            include: {
+                assessments: true
             }
         })
 

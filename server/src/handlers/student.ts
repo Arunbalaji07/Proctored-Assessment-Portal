@@ -72,6 +72,9 @@ export const getStudentById = async (req: Request, res: Response) => {
         const student = await prisma.student.findUnique({
             where: {
                 id: req.params.id
+            },
+            include: {
+                submissions: true
             }
         })
 

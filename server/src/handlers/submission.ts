@@ -57,7 +57,9 @@ export const getAllSubmissionsByAssessmentId = async (req: Request, res: Respons
                         updatedAt: true
                     }
                 },
-                answers: true
+                answers: true,
+                proctoring: true,
+                report: true
             }
         });
 
@@ -123,6 +125,7 @@ export const updateSubmission = async (req: Request, res: Response) => {
 }
 
 // TODO: DELETE SUBMISSION IS NOT USED BUT WHILE USING IT ADD onDelete: cascade in schema.prisma FILE FOR NECESSARY TABLES.
+// THIS ROUTE IS NOT CURRENTLY USED SO THIS ROUTE IS NOT TESTED YET
 export const deleteSubmission = async (req: Request, res: Response) => {
     try {
         const submission = await prisma.submission.delete({

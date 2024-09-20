@@ -17,6 +17,15 @@ import {
     getSubmissionById,
     updateSubmission
 } from "./handlers/submission";
+import {createAnswer, deleteAnswer, getAllAnswersBySubmissionId, getAnswerById, updateAnswer} from "./handlers/answer";
+import {
+    createProctoring,
+    getAllProctoringBySubmissionId,
+    getProctoringById,
+    updateProctoring
+} from "./handlers/proctoring";
+import {createReport, getReportById, getReportBySubmissionId} from "./handlers/report";
+import {createSummary, getSummaryByAssessmentId} from "./handlers/summary";
 
 const router = Router()
 
@@ -55,11 +64,32 @@ router.put('/question/:id', updateQuestion)
 router.delete('/question/:id', deleteQuestion)
 
 // SUBMISSION ROUTES
-router.get('/submissions/:assessmentId', getAllSubmissionsByAssessmentId)
+router.get('/assessment/:assessmentId/submission', getAllSubmissionsByAssessmentId)
 router.get('/submission/:id', getSubmissionById)
 router.post('/submission', createSubmission)
 router.put('/submission/:id', updateSubmission)
 router.delete('/submission/:id', deleteSubmission)
 
+// ANSWER ROUTES
+router.get('/submissions/:submissionId/answers', getAllAnswersBySubmissionId)
+router.get('/answer/:id', getAnswerById)
+router.post('/answer', createAnswer)
+router.put('/answer/:id', updateAnswer)
+router.delete('/answer/:id', deleteAnswer)
+
+// PROCTORING ROUTES
+router.get('/submission/:submissionId/proctoring', getAllProctoringBySubmissionId)
+router.get('/proctoring/:id', getProctoringById)
+router.post('/proctoring', createProctoring)
+router.put('/proctoring/:id', updateProctoring)
+
+// REPORT ROUTES
+router.get('/submission/:submissionId/report', getReportBySubmissionId)
+router.get('/report/:id', getReportById)
+router.post('/report', createReport)
+
+// ASSESSMENT SUMMARY ROUTES
+router.get('/assessment/:assessmentId/summary', getSummaryByAssessmentId)
+router.post('/assessment/:assessmentId/summary', createSummary)
 
 export default router

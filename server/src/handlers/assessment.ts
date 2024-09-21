@@ -5,8 +5,23 @@ import logger from "../logger";
 export const createAssessment = async (req: Request, res: Response) => {
     try {
         const assessment = await prisma.assessment.create({
-            data: req.body
+            data: {
+                title: req.body.title,
+                description: req.body.description,
+                category: req.body.category,
+                educatorId: req.body.educatorId,
+                scheduledAt: req.body.scheduledAt,
+                endTime: req.body.endTime
+            }
         })
+
+        await prisma.educatorLog.create({
+            data: {
+                educatorId: assessment.educatorId,
+                action: "Created an assessment."
+            }
+        })
+
         return res.status(200).json({msg: "Assessment created successfully", assessment})
     } catch (err) {
         logger.error(err);
@@ -49,6 +64,32 @@ export const getAssessmentById = async (req: Request, res: Response) => {
         }
 
         return res.status(200).json({data: assessment});
+    } catch (err) {
+        logger.error(err);
+        return res.status(500).json({msg: err.message});
+    }
+}
+
+export const getAssessmentByCategory = async (req: Request, res: Response) => {
+    try {
+        const { category } = req.params
+
+        const assessments = await prisma.assessment.findMany({
+            where: {
+                category
+            },
+            include: {
+                questions: true,
+                submissions: true
+            }
+        })
+
+        if (assessments.length === 0) {
+            return res.status(404).json({ message: 'No assessments found for this category' });
+        }
+
+        return res.status(200).json(assessments);
+
     } catch (err) {
         logger.error(err);
         return res.status(500).json({msg: err.message});

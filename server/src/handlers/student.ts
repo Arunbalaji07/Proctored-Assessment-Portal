@@ -12,8 +12,8 @@ export const createStudent = async (req: Request, res: Response) => {
             }
         })
 
-        if(studentExists) {
-            return res.status(400).json({ error: 'Student with this email id already exists'});
+        if (studentExists) {
+            return res.status(400).json({error: 'Student with this email id already exists'});
         }
 
         const student = await prisma.student.create({
@@ -23,6 +23,14 @@ export const createStudent = async (req: Request, res: Response) => {
                 password: await hashPassword(req.body.password),
             }
         })
+
+        await prisma.studentLog.create({
+            data: {
+                studentId: student.id,
+                action: 'Student signed up successfully.'
+            }
+        })
+
         return res.status(200).json({msg: "Student created successfully", student})
 
     } catch (err) {
@@ -31,7 +39,7 @@ export const createStudent = async (req: Request, res: Response) => {
     }
 }
 
-export const studentLogin = async (req:Request, res:Response) => {
+export const studentLogin = async (req: Request, res: Response) => {
     const student = await prisma.student.findUnique({
         where: {
             email: req.body.email
@@ -47,6 +55,14 @@ export const studentLogin = async (req:Request, res:Response) => {
     if (isPasswordValid) {
         logger.info("Student successfully logged in");
         const token = createJWTStudent(student)
+
+        await prisma.studentLog.create({
+            data: {
+                studentId: student.id,
+                action: 'Student logged in successfully.'
+            }
+        })
+
         return res.status(200).json({token})
     } else {
         return res.status(400).json({msg: "Incorrect password"});
@@ -93,7 +109,9 @@ export const updateStudent = async (req: Request, res: Response) => {
     try {
         const updateData: any = {
             fullName: req.body.fullName,
-            email: req.body.email
+            email: req.body.email,
+            phoneNo: req.body.phoneNo,
+            gender: req.body.gender
         };
 
         if (req.body.password) {
@@ -107,10 +125,10 @@ export const updateStudent = async (req: Request, res: Response) => {
             data: updateData
         });
 
-        return res.status(200).json({ msg: "Student details updated successfully", data: student });
+        return res.status(200).json({msg: "Student details updated successfully", data: student});
     } catch (err) {
         logger.error(err);
-        return res.status(500).json({ msg: err.message });
+        return res.status(500).json({msg: err.message});
     }
 };
 
@@ -130,3 +148,36 @@ export const deleteStudent = async (req: Request, res: Response) => {
         res.status(500).json({msg: err.message})
     }
 }
+
+export const studentLogOut = async (studentId: string) => {
+    try {
+        await prisma.studentLog.create({
+            data: {
+                studentId,
+                action: 'Student logged out successfully.'
+            }
+        })
+    } catch (err) {
+        logger.error(err)
+    }
+}
+
+export const getAllStudentLogs = async (req: Request, res: Response) => {
+    try {
+        const studentLogs = await prisma.studentLog.findMany({
+            include: {
+                student: {
+                    select: {
+                        fullName: true,
+                        id: true
+                    }
+                }
+            }
+        })
+        return res.status(200).json(studentLogs)
+    } catch (err) {
+        logger.error(err)
+        res.status(500).json({msg: err.message})
+    }
+}
+

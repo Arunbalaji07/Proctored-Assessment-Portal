@@ -4,6 +4,7 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+// TODO: NEED TO RUN prisma:generate command on saturday for creating logs
 generator client {
   provider = "prisma-client-js"
 }
@@ -19,47 +20,62 @@ enum QuestionType {
   SHORT_ANSWER
 }
 
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  NULL
+}
+
 model Admin {
-  id        String   @unique @default(uuid())
+  id        String     @unique @default(uuid())
   fullName  String
-  email     String   @unique
+  email     String     @unique
   password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  logs      AdminLog[]
 }
 
 model Educator {
-  id          String       @unique @default(uuid())
+  id          String        @unique @default(uuid())
   fullName    String
-  email       String       @unique
+  email       String        @unique
+  phoneNo     Int?          @unique @db.Integer
+  gender      Gender        @default(NULL)
   password    String
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
   assessments Assessment[]
+  logs        EducatorLog[]
 }
 
 model Student {
   id          String       @unique @default(uuid())
   fullName    String
   email       String       @unique
+  phoneNo     Int?         @unique @db.Integer
+  gender      Gender       @default(NULL)
   password    String
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   submissions Submission[]
+  log         StudentLog[]
 }
 
 model Assessment {
-  id          String       @unique @default(uuid())
-  title       String
-  description String?
-  educatorId  String
-  educator    Educator     @relation(fields: [educatorId], references: [id])
-  questions   Question[]
-  submissions Submission[]
-  scheduledAt DateTime
-  endTime     DateTime
-  createdAt   DateTime     @default(now())
-  updatedAt   DateTime     @updatedAt
+  id                String             @unique @default(uuid())
+  title             String
+  description       String?
+  category          String?
+  educatorId        String
+  educator          Educator           @relation(fields: [educatorId], references: [id])
+  questions         Question[]
+  submissions       Submission[]
+  scheduledAt       DateTime
+  endTime           DateTime
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
   assessmentSummary AssessmentSummary?
 }
 
@@ -119,13 +135,37 @@ model Report {
 }
 
 model AssessmentSummary {
-  id String @unique @default(uuid())
-  assessmentId String @unique
-  assessment Assessment @relation(fields: [assessmentId], references: [id])
+  id               String     @unique @default(uuid())
+  assessmentId     String     @unique
+  assessment       Assessment @relation(fields: [assessmentId], references: [id])
   totalSubmissions Int
-  averageScore Float
-  maxScore Float
-  minScore Float
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  averageScore     Float
+  maxScore         Float
+  minScore         Float
+  createdAt        DateTime   @default(now())
+  updatedAt        DateTime   @updatedAt
+}
+
+model StudentLog {
+  id        String   @unique @default(uuid())
+  studentId String
+  student   Student  @relation(fields: [studentId], references: [id])
+  action    String
+  timestamp DateTime @default(now())
+}
+
+model EducatorLog {
+  id         String   @unique @default(uuid())
+  educatorId String
+  educator   Educator @relation(fields: [educatorId], references: [id])
+  action     String
+  timestamp  DateTime @default(now())
+}
+
+model AdminLog {
+  id        String   @unique @default(uuid())
+  adminId   String
+  admin     Admin    @relation(fields: [adminId], references: [id])
+  action    String
+  timestamp DateTime @default(now())
 }

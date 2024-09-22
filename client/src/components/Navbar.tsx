@@ -142,7 +142,7 @@ const Navbar: React.FC<NavbarProps> = ({ disableSignIn = false, disableSignUp = 
         >
           COMPATIBILITY CHECK
         </Link>
-        <Link
+        {/* <Link
           to="/protection"
           className="text-white hover:text-yellow-400 flex items-center"
         >
@@ -161,7 +161,7 @@ const Navbar: React.FC<NavbarProps> = ({ disableSignIn = false, disableSignUp = 
             />
           </svg>
           <span className="ml-2">PROTECTION</span>
-        </Link>
+        </Link> */}
       </div>
 
       <div className="hidden md:flex space-x-4 md:space-x-8">
@@ -182,13 +182,13 @@ const Navbar: React.FC<NavbarProps> = ({ disableSignIn = false, disableSignUp = 
             SIGN UP
           </button>
         )}
-        {!isCompatibilityPage && !disableSignUp && (
+        {/* {!isCompatibilityPage && !disableSignUp && (
           <Link
           to='/askai'
           className='px-4 py-2 text-white hover:text-yellow-400'>
             ASK AI
           </Link>
-          )}
+          )} */}
       </div>
 
       {/* Modals */}

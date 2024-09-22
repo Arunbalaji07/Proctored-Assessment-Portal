@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import LoginModal from '../components/LoginModal';
+import ChatBotModal from './Askai'; // Import ChatBot Modal
 import Background from '../assets/person-using-laptop.jpg';
 
 const HomePage: React.FC = () => {
   const [showSignIn, setShowSignIn] = useState(false);
+  const [showChatBot, setShowChatBot] = useState(false); // State to control chatbot modal
   const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
 
   const toggleSignIn = () => {
     setShowSignIn(!showSignIn);
+  };
+
+  const toggleChatBot = () => {
+    setShowChatBot(!showChatBot);
   };
 
   useEffect(() => {
@@ -54,6 +60,21 @@ const HomePage: React.FC = () => {
       <div className="absolute bottom-4 left-4 text-white text-xl font-semibold bg-black bg-opacity-50 px-4 py-2 rounded-lg shadow-md">
         <p>{currentTime}</p>
       </div>
+
+      <button
+        onClick={toggleChatBot}
+        className="fixed bottom-10 right-10 bg-yellow-400 text-black p-4 rounded-full shadow-lg hover:bg-teal-700 transition-transform"
+      >
+        Ask AI
+      </button>
+
+      {showChatBot && (
+        <ChatBotModal onClose={toggleChatBot} isVisible={showChatBot} />
+      )}
+
+      {showSignIn && (
+        <LoginModal onClose={toggleSignIn} isOpen={false} />
+      )}
     </div>
   );
 };

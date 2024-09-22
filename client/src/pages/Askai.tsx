@@ -1,31 +1,36 @@
-import React, { useState, useEffect, useRef } from 'react'
-import axios from 'axios'
+import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 
 interface ChatMessage {
-  user: ChatUser
-  createdAt: Date
-  text: string
+  user: ChatUser;
+  createdAt: Date;
+  text: string;
 }
 
 interface ChatUser {
-  id: string
-  firstName: string
+  id: string;
+  firstName: string;
 }
 
-const ChatBot: React.FC = () => {
-  const muself: ChatUser = { id: '1', firstName: 'KISHORE' }
-  const bot: ChatUser = { id: '2', firstName: 'Ask AI' }
-  const [allMessages, setAllMessages] = useState<ChatMessage[]>([])
-  const [typing, setTyping] = useState<ChatUser[]>([])
-  const messagesEndRef = useRef<HTMLDivElement>(null)
+interface ChatBotModalProps {
+  onClose: () => void;
+  isVisible: boolean;
+}
+
+const ChatBotModal: React.FC<ChatBotModalProps> = ({ onClose, isVisible }) => {
+  const muself: ChatUser = { id: '1', firstName: 'You' };
+  const bot: ChatUser = { id: '2', firstName: 'Ask AI' };
+  const [allMessages, setAllMessages] = useState<ChatMessage[]>([]);
+  const [typing, setTyping] = useState<ChatUser[]>([]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const ourUrl =
-    'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyAMDOAjn9XsEMHS89ZRgv7bQwFBqnKd8Bo'
-  const header = { 'Content-Type': 'application/json' }
+    'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=AIzaSyAMDOAjn9XsEMHS89ZRgv7bQwFBqnKd8Bo';
+  const header = { 'Content-Type': 'application/json' };
 
   const getData = async (message: ChatMessage) => {
-    setTyping([bot])
-    setAllMessages((prevMessages) => [...prevMessages, message]) // Append message at the end
+    setTyping([bot]);
+    setAllMessages((prevMessages) => [...prevMessages, message]);
 
     const data = {
       contents: [
@@ -33,10 +38,10 @@ const ChatBot: React.FC = () => {
           parts: [{ text: message.text }],
         },
       ],
-    }
+    };
 
     try {
-      const response = await axios.post(ourUrl, data, { headers: header })
+      const response = await axios.post(ourUrl, data, { headers: header });
 
       if (
         response.status === 200 &&
@@ -44,43 +49,57 @@ const ChatBot: React.FC = () => {
         response.data.candidates &&
         response.data.candidates.length > 0
       ) {
-        const botResponse = response.data.candidates[0].content.parts[0].text
+        const botResponse = response.data.candidates[0].content.parts[0].text;
         const botMessage: ChatMessage = {
           user: bot,
           createdAt: new Date(),
           text: botResponse,
-        }
-        setAllMessages((prevMessages) => [...prevMessages, botMessage]) // Append bot message at the end
+        };
+        setAllMessages((prevMessages) => [...prevMessages, botMessage]);
       }
     } catch (error) {
-      console.error('Error:', error.response ? error.response.data : error)
+      console.error('Error:', error.response ? error.response.data : error);
     } finally {
-      setTyping([])
+      setTyping([]);
     }
-  }
+  };
 
   const handleSendMessage = (text: string) => {
     const userMessage: ChatMessage = {
       user: muself,
       createdAt: new Date(),
       text,
-    }
-    getData(userMessage)
-  }
+    };
+    getData(userMessage);
+  };
 
   // Scroll to the bottom of the chat when a new message arrives
   useEffect(() => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+      messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [allMessages])
+  }, [allMessages]);
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-900">
-      <div className="w-full max-w-lg h-4/5 border border-gray-700 rounded-lg flex flex-col bg-gray-800 shadow-lg p-6 overflow-hidden">
-        <div className="bg-gray-700 text-gray-100 py-4 text-center rounded-lg text-lg font-bold uppercase shadow-md">
-          ChatBot 🤖
-        </div>
+    <div
+      className={`fixed right-0 bottom-0 w-full max-w-sm bg-gray-900 bg-opacity-90 text-white p-6 transition-transform transform duration-300 ease-in-out z-50 rounded-lg ${
+        isVisible ? 'translate-y-0' : 'translate-y-full'
+      }`}
+      style={{ height: '80vh' }}
+    >
+      <button
+        onClick={onClose}
+        className="absolute top-4 right-4 text-xl text-white"
+      >
+        X
+      </button>
+
+      <div className="bg-gray-700 text-gray-100 py-4 text-center rounded-lg text-lg font-bold uppercase">
+        ASK AI
+      </div>
+
+      <div className="flex flex-col h-full">
+        {/* Messages Section */}
         <div className="flex flex-col flex-1 overflow-y-auto py-4 border-t border-b border-gray-700 scrollbar-thin scrollbar-thumb-gray-600 scrollbar-track-gray-800">
           <div className="flex flex-col gap-4">
             {allMessages.map((msg, index) => (
@@ -100,32 +119,36 @@ const ChatBot: React.FC = () => {
           </div>
           {typing.length > 0 && <div>Ask AI is typing...</div>}
         </div>
-        <div className="mt-4 flex items-center bg-gray-700 p-3 rounded-lg border border-gray-600">
+
+        {/* Input Section */}
+        <div className="flex items-center bg-gray-700 p-3 rounded-lg border border-gray-600 mt-auto mb-10">
           <input
             type="text"
             placeholder="Type your message..."
-            className="flex-1 p-4 bg-gray-800 text-gray-100 rounded-lg mr-3 focus:outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-500"
+            className="flex-1 p-4 bg-gray-800 text-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 placeholder-gray-500"
+            style={{ height: '56px' }} // Match height to input field
             onKeyPress={(e) => {
               if (e.key === 'Enter' && (e.target as HTMLInputElement).value) {
-                handleSendMessage((e.target as HTMLInputElement).value)
-                ;(e.target as HTMLInputElement).value = ''
+                handleSendMessage((e.target as HTMLInputElement).value);
+                (e.target as HTMLInputElement).value = '';
               }
             }}
           />
+          
           <button
             onClick={() =>
               handleSendMessage(
                 (document.querySelector('input') as HTMLInputElement).value
               )
             }
-            className="p-3 bg-teal-600 text-white rounded-lg hover:bg-teal-600 focus:ring-2 focus:ring-teal-400 focus:outline-none"
+            className="p-3 ml-2 bg-teal-600 text-white rounded-lg hover:bg-teal-600 focus:ring-2 focus:ring-teal-400 focus:outline-none"
           >
             Send
           </button>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ChatBot
+export default ChatBotModal;

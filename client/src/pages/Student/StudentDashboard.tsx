@@ -1,53 +1,57 @@
-// Imports and setup
 import React, { useEffect, useState } from 'react';
 import StudentNavbar from '../../components/StudentNavbar';
 import { FaAndroid } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
-import checkAuth from "../../actions/TokenValidation.ts";
-import {studentApi} from "../../axios.config.ts";
+import checkAuth from '../../actions/TokenValidation.ts';
+import { studentApi } from '../../axios.config.ts';
 
 const StudentDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const [fullName, setFullName] = useState('')
+  const [fullName, setFullName] = useState('');
   const [categories, setCategories] = useState<any[]>([]);
 
-  const id = localStorage.getItem('id')
+  const id = localStorage.getItem('id');
 
-  const isAuthenticated = checkAuth('student')
-  if(!isAuthenticated) {
+  const isAuthenticated = checkAuth('student');
+  if (!isAuthenticated) {
     navigate('/login');
-    return;
+    return null;
   }
 
+  // Fetch user details
   const getUser = async () => {
     try {
-      const res = await studentApi.get(`/api/student/${id}`)
-      setFullName(res.data.data.fullName)
+      const res = await studentApi.get(`/api/student/${id}`);
+      setFullName(res.data.data.fullName);
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
-  }
+  };
 
+  // Fetch categories for assessments
   const getCategories = async () => {
     try {
-      const res = await studentApi.get('/api/category')
-      console.log(res)
-      setCategories(res.data)
+      const res = await studentApi.get('/api/category');
+      if (Array.isArray(res.data)) {
+        setCategories(res.data); // Ensure we set an array
+      } else {
+        setCategories([]); // Handle case where response is not an array
+      }
     } catch (err) {
-      console.log(err)
+      console.log(err);
+      setCategories([]); // Handle error by setting categories to an empty array
     }
-  }
+  };
 
   useEffect(() => {
-    getUser()
-    getCategories()
+    getUser();
+    getCategories();
   }, []);
 
-
-
+  // Handle navigation to assessments for a specific category
   const handleProceed = (category: string) => {
-    navigate(`/student/${category}/assessment`); // Ensure this matches the route defined above
-};
+    navigate(`/student/${category}/assessment`); // Correct string interpolation for the route
+  };
 
   return (
     <div className="min-h-screen bg-gray-800 text-white">
@@ -61,44 +65,48 @@ const StudentDashboard: React.FC = () => {
             LIST OF CATEGORIES
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {categories.map((category, index) => {
-              const progress = (category.completed / category.totalAssessments) * 100;
-              return (
-                <div key={index} className="bg-gray-700 rounded-lg p-6">
-                  <div className="text-center mb-4">
-                    <FaAndroid className="text-4xl" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-center mb-4">
-                    {category.title.toUpperCase()}
-                  </h3>
-                  <div className="relative pt-1 mb-5">
-                    <div className="flex mb-2 items-center justify-between">
-                      <div className="text-xs font-medium text-yellow-400">Progress</div>
-                      <div className="text-xs font-medium text-yellow-400">{Math.round(progress)}%</div>
+            {categories && categories.length > 0 ? (
+              categories.map((category, index) => {
+                const progress = (category.completed / category.totalAssessments) * 100;
+                return (
+                  <div key={index} className="bg-gray-700 rounded-lg p-6">
+                    <div className="text-center mb-4">
+                      <FaAndroid className="text-4xl" />
                     </div>
-                    <div className="relative w-full bg-black rounded-full h-2.5">
-                      <div
-                        className="absolute top-0 left-0 h-2.5 bg-yellow-400 rounded-full"
-                        style={{ width: `${progress}%` }}
-                      ></div>
+                    <h3 className="text-xl font-semibold text-center mb-4">
+                      {category.title.toUpperCase()}
+                    </h3>
+                    <div className="relative pt-1 mb-5">
+                      <div className="flex mb-2 items-center justify-between">
+                        <div className="text-xs font-medium text-yellow-400">Progress</div>
+                        <div className="text-xs font-medium text-yellow-400">{Math.round(progress)}%</div>
+                      </div>
+                      <div className="relative w-full bg-black rounded-full h-2.5">
+                        <div
+                          className="absolute top-0 left-0 h-2.5 bg-yellow-400 rounded-full"
+                          style={{ width: `${progress}%` }} // Correct string interpolation for progress
+                        ></div>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex flex-col mb-4">
-                    <div className="flex justify-between mb-2">
-                      <p className="text-base">{category.totalAssessments}<br />Assessments</p>
-                      <p className="text-base">{category.completed}<br />Completed</p>
-                    </div>
+                    <div className="flex flex-col mb-4">
+                      <div className="flex justify-between mb-2">
+                        <p className="text-base">{category.totalAssessments}<br />Assessments</p>
+                        <p className="text-base">{category.completed}<br />Completed</p>
+                      </div>
 
-                    <button
-                      onClick={() => handleProceed(category.title)}
-                      className="w-full py-2 bg-white text-black rounded hover:bg-yellow-400"
-                    >
-                      View Assessments
-                    </button>
+                      <button
+                        onClick={() => handleProceed(category.title)}
+                        className="w-full py-2 bg-white text-black rounded hover:bg-yellow-400"
+                      >
+                        View Assessments
+                      </button>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })
+            ) : (
+              <p>No categories available</p> // Display a message when no categories exist
+            )}
           </div>
         </div>
       </div>

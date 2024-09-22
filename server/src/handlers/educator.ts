@@ -173,6 +173,9 @@ export const getAllEducatorLogs = async (req: Request, res: Response) => {
                         id: true
                     }
                 }
+            },
+            orderBy: {
+                timestamp: 'desc'
             }
         })
         return res.status(200).json(educatorLogs)

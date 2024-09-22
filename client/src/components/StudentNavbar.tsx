@@ -1,14 +1,29 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AiOutlineBell } from 'react-icons/ai';
+import { jwtDecode } from 'jwt-decode'
+import {studentApi} from "../axios.config.ts";
 
 const StudentNavbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
-  
-    const handleLogout = () => {
-      localStorage.removeItem('student');
-      navigate('/'); 
+
+    const token = localStorage.getItem('student')
+    const decodeToken = token ? jwtDecode<jwtPayload>(token) : null;
+    const studentId = decodeToken?.id;
+
+    const handleLogout = async () => {
+        try {
+            if (studentId) {
+                await studentApi.post('/api/student/logout', {
+                    studentId: studentId,
+                });
+                localStorage.removeItem('student');
+                navigate('/');
+            }
+        } catch (error) {
+            console.error('Logout failed', error);
+        }
     };
 
   return (

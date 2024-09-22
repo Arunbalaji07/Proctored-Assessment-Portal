@@ -67,7 +67,7 @@ router.delete('/educator/:id', deleteEducator)
 // STUDENT ROUTES
 router.get('/student', getAllStudents)
 router.get('/student/:id', getStudentById)
-router.get('/student/logs', getAllStudentLogs)
+router.get('/students/logs', getAllStudentLogs)
 router.post('/student/logout', studentLogOut)
 router.put('/student/:id', updateStudent)
 router.delete('/student/:id', deleteStudent)

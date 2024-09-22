@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken'
 type Role = "admin" | "educator" | "student"
 
 interface User {
+    id: string
     fullName: string;
     email: string;
 }
@@ -29,6 +30,7 @@ export const hashPassword = async (password: string): Promise<string> => {
 const createJWT = (user: User, role: JWTClaims["role"]): string => {
     let token: string;
     token = jwt.sign({
+            id: user.id,
             fullName: user.fullName,
             email: user.email,
             role: role

@@ -149,16 +149,18 @@ export const deleteStudent = async (req: Request, res: Response) => {
     }
 }
 
-export const studentLogOut = async (studentId: string) => {
+export const studentLogOut = async (req: Request, res: Response) => {
     try {
         await prisma.studentLog.create({
             data: {
-                studentId,
+                studentId: req.body.studentId,
                 action: 'Student logged out successfully.'
             }
         })
+        return res.status(200).json({msg: "Student logged out successfully"})
     } catch (err) {
         logger.error(err)
+        res.status(500).json({msg: err.message})
     }
 }
 
@@ -172,6 +174,9 @@ export const getAllStudentLogs = async (req: Request, res: Response) => {
                         id: true
                     }
                 }
+            },
+            orderBy: {
+                timestamp: 'desc'
             }
         })
         return res.status(200).json(studentLogs)

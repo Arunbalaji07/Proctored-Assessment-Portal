@@ -173,6 +173,7 @@ const Navbar: React.FC<NavbarProps> = ({ disableSignIn = false, disableSignUp = 
             SIGN IN
           </button>
         )}
+
         {!isCompatibilityPage && !disableSignUp && (
           <button
             onClick={handleRegisterModalOpen}
@@ -181,13 +182,23 @@ const Navbar: React.FC<NavbarProps> = ({ disableSignIn = false, disableSignUp = 
             SIGN UP
           </button>
         )}
+        {!isCompatibilityPage && !disableSignUp && (
+          <Link
+          to='/askai'
+          className='px-4 py-2 text-white hover:text-yellow-400'>
+            ASK AI
+          </Link>
+          )}
       </div>
 
       {/* Modals */}
       <LoginModal isOpen={isLoginModalOpen} onClose={handleLoginModalClose} />
-      <RegisterModal isOpen={isRegisterModalOpen} onClose={handleRegisterModalClose} />
+      <RegisterModal
+        isOpen={isRegisterModalOpen}
+        onClose={handleRegisterModalClose}
+      />
     </nav>
-  );
+  )
 };
 
 export default Navbar;

@@ -16,6 +16,7 @@ import StudentProfilePage from './pages/Student/StudentProfile';
 import AssessmentDetails from './components/AssessmentDetail';
 import AssessmentList from './components/AssessmentList';
 import TestDetailsPage from './pages/Student/TestDetailsPage';
+import Askai from './pages/Askai';
 
 const App = () => {
   return (
@@ -32,18 +33,22 @@ const App = () => {
         <Route path="/admin/users" element={<UserManagement />} />
         <Route path="/educator/create" element={<CreateAssessment />} />
         <Route path="/educator/upload" element={<ManualQuestionUpload />} />
-        <Route path="/educator/assessments" element={<AssessmentManagement />} />
+        <Route
+          path="/educator/assessments"
+          element={<AssessmentManagement />}
+        />
         <Route path="/student/profile" element={<StudentProfilePage />} />
+        <Route path="/askai" element={<Askai />} />
 
         {/* Updated nested routes for assessments */}
         <Route path="/student/:category" element={<TestDetailsPage />}>
-      <Route path="assessment">
-        <Route path=":assessmentId" element={<AssessmentDetails />} />
-      </Route>
-    </Route>
+          <Route path="assessment">
+            <Route path=":assessmentId" element={<AssessmentDetails />} />
+          </Route>
+        </Route>
       </Routes>
     </Router>
-  );
+  )
 }
 
 export default App;

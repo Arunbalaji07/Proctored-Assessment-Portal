@@ -18,7 +18,7 @@ import {
 import {
     createAssessment,
     deleteAssessment,
-    getAllAssessment, getAssessmentByCategory,
+    getAllAssessment, getAssessmentByCategory, getAssessmentByEducatorId,
     getAssessmentById,
     updateAssessment
 } from "./handlers/assessment";
@@ -77,6 +77,7 @@ router.delete('/student/:id', deleteStudent)
 router.get('/assessment', getAllAssessment)
 router.get('/assessment/:id', getAssessmentById)
 router.get('/assessment/category/:category', getAssessmentByCategory)
+router.get('/assessment/educator/:educatorId', getAssessmentByEducatorId)
 router.post('/assessment', createAssessment)
 router.put('/assessment/:id', updateAssessment)
 router.delete('/assessment/:id', deleteAssessment)

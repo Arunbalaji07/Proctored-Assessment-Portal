@@ -3,34 +3,47 @@ import React, { useEffect, useState } from 'react';
 import StudentNavbar from '../../components/StudentNavbar';
 import { FaAndroid } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import checkAuth from "../../actions/TokenValidation.ts";
+import {studentApi} from "../../axios.config.ts";
 
 const StudentDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const [userName, setUserName] = useState<string>('');
-  const [assignments, setAssignments] = useState<any[]>([]);
+  const [fullName, setFullName] = useState('')
+  const [categories, setCategories] = useState<any[]>([]);
 
-  const token = localStorage.getItem('student');
-  if (!token) {
-    navigate('/');
-    return null; // Prevent rendering when redirecting
+  const id = localStorage.getItem('id')
+
+  const isAuthenticated = checkAuth('student')
+  if(!isAuthenticated) {
+    navigate('/login');
+    return;
   }
 
-  const mockUserData = { name: 'John Doe' };
-  const mockAssignmentsData = [
-    { category: 'Assessment Category 1', totalAssessments: 10, completed: 9, startDate: '10.10.10', endDate: '10.10.10' },
-    { category: 'Assessment Category 2', totalAssessments: 10, completed: 1, startDate: '10.10.10', endDate: '10.10.10' },
-    { category: 'Assessment Category 3', totalAssessments: 10, completed: 1, startDate: '10.10.10', endDate: '10.10.10' }
-  ];
+  const getUser = async () => {
+    try {
+      const res = await studentApi.get(`/api/student/${id}`)
+      setFullName(res.data.data.fullName)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  const getCategories = async () => {
+    try {
+      const res = await studentApi.get('/api/category')
+      console.log(res)
+      setCategories(res.data)
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   useEffect(() => {
-    const loadData = () => {
-      setUserName(mockUserData.name);
-      setAssignments(mockAssignmentsData);
-    };
-    const timeoutId = setTimeout(loadData, 1000);
-    
-    return () => clearTimeout(timeoutId); // Cleanup on unmount
+    getUser()
+    getCategories()
   }, []);
+
+
 
   const handleProceed = (category: string) => {
     navigate(`/student/${category}/assessment`); // Ensure this matches the route defined above
@@ -41,22 +54,22 @@ const StudentDashboard: React.FC = () => {
       <StudentNavbar />
       <div className="p-6">
         <div className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-8">
-          WELCOME {userName.toUpperCase()}!
+          WELCOME {fullName.toUpperCase()}!
         </div>
         <div className="mt-8">
           <h2 className="text-2xl lg:text-3xl font-semibold text-left mb-6">
-            LIST OF ASSESSMENTS
+            LIST OF CATEGORIES
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {assignments.map((assignment, index) => {
-              const progress = (assignment.completed / assignment.totalAssessments) * 100;
+            {categories.map((category, index) => {
+              const progress = (category.completed / category.totalAssessments) * 100;
               return (
                 <div key={index} className="bg-gray-700 rounded-lg p-6">
                   <div className="text-center mb-4">
                     <FaAndroid className="text-4xl" />
                   </div>
                   <h3 className="text-xl font-semibold text-center mb-4">
-                    {assignment.category}
+                    {category.title.toUpperCase()}
                   </h3>
                   <div className="relative pt-1 mb-5">
                     <div className="flex mb-2 items-center justify-between">
@@ -72,15 +85,12 @@ const StudentDashboard: React.FC = () => {
                   </div>
                   <div className="flex flex-col mb-4">
                     <div className="flex justify-between mb-2">
-                      <p className="text-base">{assignment.totalAssessments}<br />Assessments</p>
-                      <p className="text-base">{assignment.completed}<br />Completed</p>
+                      <p className="text-base">{category.totalAssessments}<br />Assessments</p>
+                      <p className="text-base">{category.completed}<br />Completed</p>
                     </div>
-                    <div className="flex justify-between mb-4">
-                      <p className="text-base">{assignment.startDate}<br />Start Date</p>
-                      <p className="text-base">{assignment.endDate}<br />End Date</p>
-                    </div>
+
                     <button
-                      onClick={() => handleProceed(assignment.category)}
+                      onClick={() => handleProceed(category.title)}
                       className="w-full py-2 bg-white text-black rounded hover:bg-yellow-400"
                     >
                       View Assessments

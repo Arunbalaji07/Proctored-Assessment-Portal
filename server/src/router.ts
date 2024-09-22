@@ -33,7 +33,7 @@ import {
     createSubmission,
     deleteSubmission,
     getAllSubmissionsByAssessmentId,
-    getSubmissionById,
+    getSubmissionById, getSubmissionByStudentAndAssessmentId,
     updateSubmission
 } from "./handlers/submission";
 import {createAnswer, deleteAnswer, getAllAnswersBySubmissionId, getAnswerById, updateAnswer} from "./handlers/answer";
@@ -45,6 +45,7 @@ import {
 } from "./handlers/proctoring";
 import {createReport, getReportById, getReportBySubmissionId} from "./handlers/report";
 import {createSummary, getSummaryByAssessmentId} from "./handlers/summary";
+import {createCategory, getAllCategories} from "./handlers/category";
 
 const router = Router()
 
@@ -90,6 +91,7 @@ router.delete('/question/:id', deleteQuestion)
 // SUBMISSION ROUTES
 router.get('/assessment/:assessmentId/submission', getAllSubmissionsByAssessmentId)
 router.get('/submission/:id', getSubmissionById)
+router.get('/submission/student/:studentId/assessment/:assessmentId', getSubmissionByStudentAndAssessmentId)
 router.post('/submission', createSubmission)
 router.put('/submission/:id', updateSubmission)
 router.delete('/submission/:id', deleteSubmission)
@@ -115,5 +117,10 @@ router.post('/report', createReport)
 // ASSESSMENT SUMMARY ROUTES
 router.get('/assessment/:assessmentId/summary', getSummaryByAssessmentId)
 router.post('/assessment/:assessmentId/summary', createSummary)
+
+// CATEGORY ROUTES
+router.get('/category', getAllCategories)
+router.post('/category', createCategory)
+
 
 export default router

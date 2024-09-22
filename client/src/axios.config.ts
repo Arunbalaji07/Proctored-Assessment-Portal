@@ -4,11 +4,11 @@ import axios from 'axios'
 const getTokenByRole = (role: string) => {
     switch(role) {
         case 'admin':
-            return localStorage.getItem('adminToken');
+            return localStorage.getItem('admin');
         case 'student':
-            return localStorage.getItem('studentToken');
+            return localStorage.getItem('student');
         case 'educator':
-            return localStorage.getItem('educatorToken');
+            return localStorage.getItem('educator');
         default:
             return null; // Handle cases where the role is not defined
     }

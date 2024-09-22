@@ -54,8 +54,17 @@ export const getAssessmentById = async (req: Request, res: Response) => {
                 id: req.params.id
             },
             include: {
-                questions: true,
-                submissions: true
+                questions: {
+                    select: {
+                        mark: true
+                    }
+                }
+            }
+        })
+
+        const questionCount = await prisma.question.count({
+            where: {
+                assessmentId: assessment.id
             }
         })
 
@@ -63,7 +72,7 @@ export const getAssessmentById = async (req: Request, res: Response) => {
             return res.status(404).json({msg: "Assessment not found"});
         }
 
-        return res.status(200).json({data: assessment});
+        return res.status(200).json({questionCount, assessment});
     } catch (err) {
         logger.error(err);
         return res.status(500).json({msg: err.message});
@@ -79,7 +88,6 @@ export const getAssessmentByCategory = async (req: Request, res: Response) => {
                 category
             },
             include: {
-                questions: true,
                 submissions: true
             }
         })

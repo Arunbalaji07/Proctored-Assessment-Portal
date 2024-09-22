@@ -83,6 +83,7 @@ model Question {
   id            String       @unique @default(uuid())
   content       String
   type          QuestionType
+  mark          Int          @default(0)
   options       String[]     @default([])
   correctAnswer String
   difficulty    String?
@@ -168,4 +169,10 @@ model AdminLog {
   admin     Admin    @relation(fields: [adminId], references: [id])
   action    String
   timestamp DateTime @default(now())
+}
+
+model Category {
+  id        String   @unique @default(uuid())
+  title     String
+  createdAt DateTime @default(now())
 }

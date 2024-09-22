@@ -73,6 +73,53 @@ export const getAllSubmissionsByAssessmentId = async (req: Request, res: Respons
     }
 }
 
+export const getSubmissionByStudentAndAssessmentId = async (req: Request, res: Response) => {
+    const { studentId, assessmentId } = req.params;
+
+    try {
+        const submission = await prisma.submission.findFirst({
+            where: {
+                AND: [
+                    {studentId: studentId},
+                    {assessmentId: assessmentId}
+                    ]
+            },
+            include: {
+                student: {
+                    select: {
+                        fullName: true,
+                        email: true,
+                        createdAt: true,
+                        updatedAt: true
+                    }
+                },
+                answers: {
+                    select: {
+                        id: true,
+                        questionId: true,
+                        question: true,
+                        answer: true,
+                        createdAt: true,
+                        updatedAt: true
+                    }
+                },
+                proctoring: true,
+                report: true
+            }
+        });
+
+        if (!submission) {
+            return res.status(404).json({ msg: "Submission not found" });
+        }
+
+        return res.status(200).json(submission);
+    } catch (err) {
+        logger.error(err);
+        return res.status(500).json({ msg: err.message });
+    }
+};
+
+
 export const getSubmissionById = async (req: Request, res: Response) => {
     try {
         const submission = await prisma.submission.findUnique({

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AiOutlineBell } from 'react-icons/ai';
-import { jwtDecode } from 'jwt-decode'
 import {studentApi} from "../axios.config.ts";
 
 const StudentNavbar: React.FC = () => {

@@ -58,7 +58,7 @@ router.delete('/admin/:id', deleteAdmin)
 // EDUCATOR ROUTES
 router.get('/educator', getAllEducators)
 router.get('/educator/:id', getEducatorById)
-router.get('/educator/logs', getAllEducatorLogs)
+router.get('/educators/logs', getAllEducatorLogs)
 router.post('/educator', createEducator)
 router.post('/educator/logout', educatorLogOut)
 router.put('/educator/:id', updateEducator)

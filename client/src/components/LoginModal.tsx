@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios from 'axios';
+import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom';
 import { FcGoogle } from "react-icons/fc";
 import { Button } from "./ui/button";
@@ -35,9 +36,12 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
       });
 
       const { token } = response.data;
+      const decodedToken = token ? jwtDecode<jwtPayload>(token) : null;
+      const id = decodedToken?.id;
 
       if (token) {
         localStorage.setItem(`${role}`, token);
+        localStorage.setItem(`id`, id)
 
         switch (role) {
           case 'admin':

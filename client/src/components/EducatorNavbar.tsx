@@ -1,14 +1,27 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { AiOutlineBell } from 'react-icons/ai';
+import {educatorApi} from "../axios.config.ts";
 
 const EducatorNavbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
+
+    const educatorId = localStorage.getItem('id')
   
-    const handleLogout = () => {
-      localStorage.removeItem('educator');
-      navigate('/'); 
+    const handleLogout = async () => {
+        try {
+            if (educatorId) {
+                await educatorApi.post('/api/educator/logout', {
+                    educatorId: educatorId,
+                });
+                localStorage.removeItem('educator');
+                localStorage.removeItem('id')
+                navigate('/');
+            }
+        } catch (error) {
+            console.error('Logout failed', error);
+        }
     };
 
   return (

@@ -8,7 +8,8 @@ const AdminNavbar: React.FC = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('admin');
-    navigate('/'); 
+    localStorage.removeItem('id');
+    navigate('/');
   };
 
   return (

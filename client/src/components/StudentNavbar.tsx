@@ -8,9 +8,7 @@ const StudentNavbar: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
     const navigate = useNavigate();
 
-    const token = localStorage.getItem('student')
-    const decodeToken = token ? jwtDecode<jwtPayload>(token) : null;
-    const studentId = decodeToken?.id;
+    const studentId = localStorage.getItem('id')
 
     const handleLogout = async () => {
         try {
@@ -19,6 +17,7 @@ const StudentNavbar: React.FC = () => {
                     studentId: studentId,
                 });
                 localStorage.removeItem('student');
+                localStorage.removeItem('id');
                 navigate('/');
             }
         } catch (error) {

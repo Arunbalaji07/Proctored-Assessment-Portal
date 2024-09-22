@@ -80,7 +80,7 @@ const StudentNavbar: React.FC = () => {
           </div>
           <div className="flex flex-col space-y-4 p-4 text-right">
             <Link to="/student" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>HOME</Link>
-            <Link to="/profile" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>PROFILE</Link>
+            <Link to="/student/profile" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>PROFILE</Link>
             <Link to="/settings" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>SETTINGS</Link>
             <button
               onClick={handleLogout} 
@@ -94,7 +94,7 @@ const StudentNavbar: React.FC = () => {
 
       <div className="hidden md:flex md:space-x-8">
         <Link to="/student" className="text-white hover:text-yellow-400">HOME</Link>
-        <Link to="/profile" className="text-white hover:text-yellow-400">PROFILE</Link>
+        <Link to="/student/profile" className="text-white hover:text-yellow-400">PROFILE</Link>
         <Link to="/settings" className="text-white hover:text-yellow-400">SETTINGS</Link>
       </div>
 

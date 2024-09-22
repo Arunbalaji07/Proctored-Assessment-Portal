@@ -1,3 +1,4 @@
+// Imports and setup
 import React, { useEffect, useState } from 'react';
 import StudentNavbar from '../../components/StudentNavbar';
 import { FaAndroid } from 'react-icons/fa';
@@ -9,66 +10,46 @@ const StudentDashboard: React.FC = () => {
   const [assignments, setAssignments] = useState<any[]>([]);
 
   const token = localStorage.getItem('student');
-    if (!token) {
-      // Redirect to login page if no token is found
-      navigate('/');
-      return;
-    }
+  if (!token) {
+    navigate('/');
+    return null; // Prevent rendering when redirecting
+  }
 
   const mockUserData = { name: 'John Doe' };
   const mockAssignmentsData = [
-    {
-      category: 'Assessment Category 1',
-      totalAssessments: 10,
-      completed: 9,
-      startDate: '10.10.10',
-      endDate: '10.10.10'
-    },
-    {
-      category: 'Assessment Category 2',
-      totalAssessments: 10,
-      completed: 1,
-      startDate: '10.10.10',
-      endDate: '10.10.10'
-    },
-    {
-      category: 'Assessment Category 3',
-      totalAssessments: 10,
-      completed: 1,
-      startDate: '10.10.10',
-      endDate: '10.10.10'
-    }
+    { category: 'Assessment Category 1', totalAssessments: 10, completed: 9, startDate: '10.10.10', endDate: '10.10.10' },
+    { category: 'Assessment Category 2', totalAssessments: 10, completed: 1, startDate: '10.10.10', endDate: '10.10.10' },
+    { category: 'Assessment Category 3', totalAssessments: 10, completed: 1, startDate: '10.10.10', endDate: '10.10.10' }
   ];
 
   useEffect(() => {
-    setTimeout(() => {
+    const loadData = () => {
       setUserName(mockUserData.name);
       setAssignments(mockAssignmentsData);
-    }, 1000);
+    };
+    const timeoutId = setTimeout(loadData, 1000);
+    
+    return () => clearTimeout(timeoutId); // Cleanup on unmount
   }, []);
 
   const handleProceed = (category: string) => {
-    alert(`Proceeding with ${category}`);
-  };
+    navigate(`/student/${category}/assessment`); // Ensure this matches the route defined above
+};
 
   return (
     <div className="min-h-screen bg-gray-800 text-white">
       <StudentNavbar />
-
       <div className="p-6">
         <div className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold mb-8">
           WELCOME {userName.toUpperCase()}!
         </div>
-
         <div className="mt-8">
           <h2 className="text-2xl lg:text-3xl font-semibold text-left mb-6">
             LIST OF ASSESSMENTS
           </h2>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {assignments.map((assignment, index) => {
               const progress = (assignment.completed / assignment.totalAssessments) * 100;
-
               return (
                 <div key={index} className="bg-gray-700 rounded-lg p-6">
                   <div className="text-center mb-4">
@@ -77,24 +58,16 @@ const StudentDashboard: React.FC = () => {
                   <h3 className="text-xl font-semibold text-center mb-4">
                     {assignment.category}
                   </h3>
-                  
-                  <div className="border-b border-gray-600 mb-4"></div>
                   <div className="relative pt-1 mb-5">
                     <div className="flex mb-2 items-center justify-between">
-                      <div className="text-xs font-medium text-yellow-400">
-                        Progress
-                      </div>
-                      <div className="text-xs font-medium text-yellow-400">
-                        {Math.round(progress)}%
-                      </div>
+                      <div className="text-xs font-medium text-yellow-400">Progress</div>
+                      <div className="text-xs font-medium text-yellow-400">{Math.round(progress)}%</div>
                     </div>
-                    <div className="flex items-center">
-                      <div className="relative w-full bg-black rounded-full h-2.5">
-                        <div
-                          className="absolute top-0 left-0 h-2.5 bg-yellow-400 rounded-full"
-                          style={{ width: `${progress}%` }}
-                        ></div>
-                      </div>
+                    <div className="relative w-full bg-black rounded-full h-2.5">
+                      <div
+                        className="absolute top-0 left-0 h-2.5 bg-yellow-400 rounded-full"
+                        style={{ width: `${progress}%` }}
+                      ></div>
                     </div>
                   </div>
                   <div className="flex flex-col mb-4">

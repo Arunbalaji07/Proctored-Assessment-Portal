@@ -68,7 +68,6 @@ const AdminNavbar: React.FC = () => {
             <Link to="/admin" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>HOME</Link>
             <Link to="/admin/users" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>USERS</Link>
             <Link to="/admin/assessments" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>ASSESSMENTS</Link>
-            <Link to="/admin/reports" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>REPORTS</Link>
             <Link to="/admin/settings" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>SETTINGS</Link>
             <Link to="/admin/audit-logs" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>AUDIT LOGS</Link>
             <Link to="/admin/proctoring" className="text-white text-xl hover:text-yellow-400" onClick={() => setIsOpen(false)}>AI PROCTORING</Link>
@@ -87,7 +86,6 @@ const AdminNavbar: React.FC = () => {
         <Link to="/admin" className="text-white hover:text-yellow-400">HOME</Link>
         <Link to="/admin/users" className="text-white hover:text-yellow-400">USERS</Link>
         <Link to="/admin/assessments" className="text-white hover:text-yellow-400">ASSESSMENTS</Link>
-        <Link to="/admin/reports" className="text-white hover:text-yellow-400">REPORTS</Link>
         <Link to="/admin/settings" className="text-white hover:text-yellow-400">SETTINGS</Link>
         <Link to="/admin/audit-logs" className="text-white hover:text-yellow-400">AUDIT LOGS</Link>
         <Link to="/admin/proctoring" className="text-white hover:text-yellow-400">AI PROCTORING</Link>

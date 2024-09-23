@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { studentApi } from "../axios.config.ts";
+import {Link} from "react-router-dom"
+import { useNavigate } from 'react-router-dom';
 
 interface Question {
   mark: number;
@@ -47,12 +49,14 @@ const Modal: React.FC<{ description: string; onClose: () => void }> = ({ descrip
 };
 
 const AssessmentDetails: React.FC = () => {
+  const navigate = useNavigate();
   const { category, assessmentId } = useParams<{ category: string; assessmentId: string }>();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [assessment, setAssessment] = useState<Assessment | null>(null);
   const [questionCount, setQuestionCount] = useState<number>(0);
   const [submission, setSubmission] = useState(null);
   const [isAnalysisDisabled, setIsAnalysisDisabled] = useState(true);
+  
 
   const studentId = localStorage.getItem('id'); // Retrieve studentId from localStorage
 
@@ -89,6 +93,12 @@ const AssessmentDetails: React.FC = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false);
   };
+  
+  
+  const handleproceed = () => {
+    navigate(`/student/assessment-setup/${assessmentId}`); 
+  };
+
 
   const totalMarks = assessment?.questions.reduce((acc, question) => acc + question.mark, 0) || 0;
 
@@ -99,7 +109,7 @@ const AssessmentDetails: React.FC = () => {
   return (
       <div className="min-h-screen bg-gray-900 text-white p-6">
         <h1 className="text-4xl font-extrabold text-yellow-300 mb-6">
-          {category.toUpperCase()} - {assessment.title.toUpperCase()}
+        {category.toUpperCase()} - {assessment.title.toUpperCase()}
         </h1>
 
         <div className="flex flex-col md:flex-row justify-between items-center mb-8 space-y-4 md:space-y-0">
@@ -155,6 +165,7 @@ const AssessmentDetails: React.FC = () => {
             View Analysis
           </button>
           <button
+          onClick={handleproceed}
               className="py-3 px-6 bg-yellow-400 text-black font-semibold rounded-lg hover:bg-yellow-500 transition-colors">
             Start Assessment
           </button>

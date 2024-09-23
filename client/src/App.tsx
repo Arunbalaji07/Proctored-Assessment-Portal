@@ -21,6 +21,8 @@ import AssessmentSetup from './pages/Student/SystemCheck';
 import TestPage from './pages/Student/ViewTest';
 import ReportsPage from './pages/Student/StudentReport';
 import Protection from './components/Protection';
+import ViewAssessmentList from './pages/Admin/ViewAssessments';
+import StudentReportAdmin from './pages/Admin/StudentReportAdmin';
 
 const App = () => {
   return (
@@ -54,6 +56,8 @@ const App = () => {
             <Route path=":assessmentId" element={<AssessmentDetails />} />
           </Route>
         </Route>
+        <Route path="/admin/assessments" element={<ViewAssessmentList/>}/>
+        <Route path="/admin/student-reports/:assessmentId" element={<StudentReportAdmin/>} />
       </Routes>
     </Router>
   )

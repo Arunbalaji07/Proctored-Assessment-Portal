@@ -23,6 +23,7 @@ import ReportsPage from './pages/Student/StudentReport';
 import Protection from './components/Protection';
 import ViewAssessmentList from './pages/Admin/ViewAssessments';
 import StudentReportAdmin from './pages/Admin/StudentReportAdmin';
+import EditAssessment from "./pages/Educator/EditAssessment.tsx";
 
 const App = () => {
   return (
@@ -38,6 +39,7 @@ const App = () => {
         <Route path="/admin/users" element={<UserManagement />} />
         <Route path="/educator/create" element={<CreateAssessment />} />
         <Route path="/educator/upload" element={<ManualQuestionUpload />} />
+        <Route path="/educator/edit/assessment/:assessmentId" element={<EditAssessment />} />
         <Route path="/educator/profile" element={<EducatorProfile/>}/>
         {/* <Route path="/protection" element={<Protection/>}/> */}
         <Route 

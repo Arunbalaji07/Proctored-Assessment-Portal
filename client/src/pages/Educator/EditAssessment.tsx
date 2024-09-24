@@ -1,41 +1,63 @@
 import React, { useState, useEffect } from 'react';
 import EducatorNavbar from '@/components/EducatorNavbar';
 import { educatorApi } from '../../axios.config.ts';
-import checkAuth from "../../actions/TokenValidation.ts";
-import { useNavigate } from "react-router-dom";
+import checkAuth from '../../actions/TokenValidation.ts';
+import { useNavigate, useParams } from 'react-router-dom';
 
 interface Category {
   id: string;
   title: string;
 }
 
-const CreateAssessment: React.FC = () => {
+const EditAssessment: React.FC = () => {
   const navigate = useNavigate();
+  const { assessmentId } = useParams<{ assessmentId: string }>(); // Get assessmentId from URL
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('');
   const [categories, setCategories] = useState<Category[]>([]);
   const [startDateTime, setStartDateTime] = useState<string>('');
   const [endDateTime, setEndDateTime] = useState<string>('');
-  const [errorMessages, setErrorMessages] = useState<string[]>([]); // State for error messages
+  const [loading, setLoading] = useState(true); // Loading state
 
   const isAuthenticated = checkAuth('educator');
   if (!isAuthenticated) {
     navigate('/login');
   }
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await educatorApi.get('/api/category');
-        setCategories(response.data);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      }
-    };
+  const fetchAssessmentDetails = async () => {
+    try {
+      const response = await educatorApi.get(`/api/assessment/${assessmentId}`);
+      console.log('Assessment Details:', response.data); // Debugging: log the response
+      const { title, description, category, scheduledAt, endTime } = response.data.assessment;
 
+      // Populate form fields with fetched data
+      setTitle(title);
+      setDescription(description);
+      setCategory(category);
+      setStartDateTime(new Date(scheduledAt).toISOString().slice(0, 16)); // Format for datetime-local input
+      setEndDateTime(new Date(endTime).toISOString().slice(0, 16)); // Format for datetime-local input
+    } catch (error) {
+      console.error('Error fetching assessment details:', error);
+    } finally {
+      setLoading(false); // Stop loading once data is fetched
+    }
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const response = await educatorApi.get('/api/category');
+      console.log('Categories:', response.data); // Debugging: log the response
+      setCategories(response.data);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    }
+  };
+
+  useEffect(() => {
     fetchCategories();
-  }, []);
+    fetchAssessmentDetails();
+  }, [assessmentId]);
 
   const format12HourTime = (date: Date) => {
     let hours = date.getHours();
@@ -44,7 +66,7 @@ const CreateAssessment: React.FC = () => {
     hours = hours % 12;
     hours = hours ? hours : 12;
     const minutesStr = minutes < 10 ? '0' + minutes : minutes;
-    return `${hours}:${minutesStr} ${ampm}`;
+    return hours + ':' + minutesStr + ' ' + ampm;
   };
 
   const calculateDuration = () => {
@@ -62,35 +84,9 @@ const CreateAssessment: React.FC = () => {
     return '';
   };
 
-  const validateInputs = () => {
-    const errors: string[] = [];
-    if (!title) errors.push('Title is required');
-    if (!description) errors.push('Description is required');
-    if (!category) errors.push('Category is required');
-    if (!startDateTime || isNaN(new Date(startDateTime).getTime())) {
-      errors.push('Invalid start date and time');
-    }
-    if (!endDateTime || isNaN(new Date(endDateTime).getTime())) {
-      errors.push('Invalid end date and time');
-    } else {
-      const start = new Date(startDateTime);
-      const end = new Date(endDateTime);
-      if (end <= start) {
-        errors.push('End date must be later than start date');
-      }
-    }
-
-    setErrorMessages(errors);
-    return errors.length === 0; // Return true if no errors
-  };
-
-  const handleCreateAssessment = async () => {
-    if (!validateInputs()) {
-      return; // Prevent submission if there are validation errors
-    }
-
+  const handleUpdate = async () => {
     try {
-      const response = await educatorApi.post('/api/assessment', {
+      const response = await educatorApi.put(`/api/assessment/${assessmentId}`, {
         title,
         description,
         educatorId: localStorage.getItem('id'),
@@ -98,31 +94,25 @@ const CreateAssessment: React.FC = () => {
         endTime: new Date(endDateTime).toISOString(),
         category,
       });
-      alert('Assessment created successfully');
-      navigate('/educator/upload');
+      // console.log('Assessment updated successfully', response.data);
+      alert("Assessment updated!!!")
+      // Optionally navigate to another page or show a success message
     } catch (error) {
-      console.error('Error creating assessment:', error);
+      console.error('Error updating assessment:', error);
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>; // Display loading indicator while fetching
+  }
 
   return (
       <div className="min-h-screen bg-gray-900 text-white">
         <EducatorNavbar />
         <div className="p-6">
           <header className="text-3xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-8 text-center">
-            <h1>Create Assessment</h1>
+            <h1>Edit Assessment</h1>
           </header>
-
-          {/* Error Messages */}
-          {errorMessages.length > 0 && (
-              <div className="mb-4">
-                <ul className="bg-red-500 p-4 rounded-lg">
-                  {errorMessages.map((error, index) => (
-                      <li key={index} className="text-white">{error}</li>
-                  ))}
-                </ul>
-              </div>
-          )}
 
           {/* Form Fields */}
           <div className="bg-gray-800 p-6 rounded-lg shadow-lg mb-8">
@@ -150,7 +140,7 @@ const CreateAssessment: React.FC = () => {
               >
                 <option value="">Select Category</option>
                 {categories.map((cat) => (
-                    <option key={cat.id} value={cat.title}>
+                    <option key={cat.id} value={cat.id}>
                       {cat.title.toUpperCase()}
                     </option>
                 ))}
@@ -210,13 +200,13 @@ const CreateAssessment: React.FC = () => {
             </div>
           </div>
 
-          {/* Create Button */}
+          {/* Update Button */}
           <div className="flex justify-end">
             <button
-                onClick={handleCreateAssessment}
+                onClick={handleUpdate}
                 className="bg-teal-500 text-white px-6 py-3 rounded-lg shadow-md hover:bg-teal-600"
             >
-              Create Assessment
+              Update Assessment
             </button>
           </div>
         </div>
@@ -224,4 +214,4 @@ const CreateAssessment: React.FC = () => {
   );
 };
 
-export default CreateAssessment;
+export default EditAssessment;

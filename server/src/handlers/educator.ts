@@ -91,7 +91,11 @@ export const getEducatorById = async (req: Request, res: Response) => {
                 id: req.params.id
             },
             include: {
-                assessments: true
+                assessments: {
+                    orderBy: {
+                        createdAt: "desc"
+                    }
+                }
             }
         })
 

@@ -5,6 +5,7 @@ import 'chart.js/auto';
 import Assessment from '@/assets/exam (1).png';
 import {Link, useNavigate} from 'react-router-dom';
 import { educatorApi } from "../../axios.config.ts";
+import checkAuth from "../../actions/TokenValidation.ts";
 
 interface PieData {
   labels: string[];
@@ -32,6 +33,11 @@ const EducatorDashboard: React.FC = () => {
       },
     ],
   });
+
+  const isAuthenticated = checkAuth('educator')
+  if (!isAuthenticated) {
+    navigate('/login');
+  }
 
   const id = localStorage.getItem('id');
 
